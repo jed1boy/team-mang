@@ -28,9 +28,9 @@
 
         --ball-color: #e94560; /* ball fill */
 
-        --paddle-p1-color: #ec0909; /* left paddle  (Player 1) */
+        --paddle-Tagalog-color: #ec0909; /* left paddle  (Player 1) */
 
-        --paddle-p2-color: #6c00f8; /* right paddle (Player 2) */
+        --paddle-Bisaya-color: #6c00f8; /* right paddle (Player 2) */
 
         --score-color: #ffffff; /* score & UI text */
 
@@ -218,7 +218,7 @@
 
         gameOver: false,
 
-        scores: { p1: 0, p2: 0 },
+        scores: { Tagalog: 0, Bisaya: 0 },
       };
 
       /* ─────────────────────────────────────────
@@ -269,7 +269,7 @@
         dy: 0, // current vertical velocity (set by key handlers)
       };
 
-      const p1 = {
+      const Tagalog = {
         ...paddleDefaults,
 
         x: SETTINGS.paddle.margin,
@@ -277,7 +277,7 @@
         y: canvas.height / 2 - SETTINGS.paddle.height / 2,
       };
 
-      const p2 = {
+      const Bisaya = {
         ...paddleDefaults,
 
         x: canvas.width - SETTINGS.paddle.margin - SETTINGS.paddle.width,
@@ -348,21 +348,21 @@
       function movePaddles() {
         // Player 1: W (up) / S (down)
 
-        if (keys["w"] || keys["W"]) p1.dy = -SETTINGS.paddle.speed;
-        else if (keys["s"] || keys["S"]) p1.dy = SETTINGS.paddle.speed;
-        else p1.dy = 0;
+        if (keys["w"] || keys["W"]) Tagalog.dy = -SETTINGS.paddle.speed;
+        else if (keys["s"] || keys["S"]) Tagalog.dy = SETTINGS.paddle.speed;
+        else Tagalog.dy = 0;
 
         // Player 2: ArrowUp / ArrowDown
 
-        if (keys["ArrowUp"]) p2.dy = -SETTINGS.paddle.speed;
-        else if (keys["ArrowDown"]) p2.dy = SETTINGS.paddle.speed;
-        else p2.dy = 0;
+        if (keys["ArrowUp"]) Bisaya.dy = -SETTINGS.paddle.speed;
+        else if (keys["ArrowDown"]) Bisaya.dy = SETTINGS.paddle.speed;
+        else Bisaya.dy = 0;
 
         // Apply movement and keep paddles inside the court
 
-        p1.y = clamp(p1.y + p1.dy, 0, canvas.height - p1.h);
+        Tagalog.y = clamp(Tagalog.y + Tagalog.dy, 0, canvas.height - Tagalog.h);
 
-        p2.y = clamp(p2.y + p2.dy, 0, canvas.height - p2.h);
+        Bisaya.y = clamp(Bisaya.y + Bisaya.dy, 0, canvas.height - Bisaya.h);
       }
 
       function moveBall() {
@@ -387,41 +387,41 @@
         // ── Paddle collision (Player 1)
 
         if (
-          ball.x - ball.r <= p1.x + p1.w &&
-          ball.x + ball.r >= p1.x &&
-          ball.y >= p1.y &&
-          ball.y <= p1.y + p1.h
+          ball.x - ball.r <= Tagalog.x + Tagalog.w &&
+          ball.x + ball.r >= Tagalog.x &&
+          ball.y >= Tagalog.y &&
+          ball.y <= Tagalog.y + Tagalog.h
         ) {
-          ball.x = p1.x + p1.w + ball.r; // push ball out of paddle
+          ball.x = Tagalog.x + Tagalog.w + ball.r; // push ball out of paddle
 
-          bounceBallOff(p1, 1);
+          bounceBallOff(Tagalog, 1);
         }
 
         // ── Paddle collision (Player 2)
 
         if (
-          ball.x + ball.r >= p2.x &&
-          ball.x - ball.r <= p2.x + p2.w &&
-          ball.y >= p2.y &&
-          ball.y <= p2.y + p2.h
+          ball.x + ball.r >= Bisaya.x &&
+          ball.x - ball.r <= Bisaya.x + Bisaya.w &&
+          ball.y >= Bisaya.y &&
+          ball.y <= Bisaya.y + Bisaya.h
         ) {
-          ball.x = p2.x - ball.r; // push ball out of paddle
+          ball.x = Bisaya.x - ball.r; // push ball out of paddle
 
-          bounceBallOff(p2, -1);
+          bounceBallOff(Bisaya, -1);
         }
 
-        // ── Score: ball leaves left side → P2 scores
+        // ── Score: ball leaves left side → Bisaya scores
 
         if (ball.x - ball.r < 0) {
-          score("p2");
+          score("Bisaya");
 
           return;
         }
 
-        // ── Score: ball leaves right side → P1 scores
+        // ── Score: ball leaves right side → Tagalog scores
 
         if (ball.x + ball.r > canvas.width) {
-          score("p1");
+          score("Tagalog");
         }
       }
 
@@ -475,7 +475,7 @@
         } else {
           // Serve toward the player who just lost the point
 
-          ball.reset(player === "p1"); // scored on p2 → serve left; p1 → right
+          ball.reset(player === "Tagalog"); // scored on Bisaya → serve left; Tagalog → right
 
           resetPaddles();
         }
@@ -518,9 +518,9 @@
 
         ctx.textAlign = "center";
 
-        ctx.fillText(state.scores.p1, canvas.width / 4, 60);
+        ctx.fillText(state.scores.Tagalog, canvas.width / 4, 60);
 
-        ctx.fillText(state.scores.p2, (canvas.width * 3) / 4, 60);
+        ctx.fillText(state.scores.Bisaya, (canvas.width * 3) / 4, 60);
 
         // ── Player labels (subtle)
 
@@ -528,27 +528,27 @@
 
         ctx.globalAlpha = 0.4;
 
-        ctx.fillText("P1", canvas.width / 4, 80);
+        ctx.fillText("Tagalog", canvas.width / 4, 80);
 
-        ctx.fillText("P2", (canvas.width * 3) / 4, 80);
+        ctx.fillText("Bisaya", (canvas.width * 3) / 4, 80);
 
         ctx.globalAlpha = 1;
 
         // ── Paddles
 
-        ctx.fillStyle = cssVar("--paddle-p1-color");
+        ctx.fillStyle = cssVar("--paddle-Tagalog-color");
 
         ctx.beginPath();
 
-        ctx.roundRect(p1.x, p1.y, p1.w, p1.h, 4);
+        ctx.roundRect(Tagalog.x, Tagalog.y, Tagalog.w, Tagalog.h, 4);
 
         ctx.fill();
 
-        ctx.fillStyle = cssVar("--paddle-p2-color");
+        ctx.fillStyle = cssVar("--paddle-Bisaya-color");
 
         ctx.beginPath();
 
-        ctx.roundRect(p2.x, p2.y, p2.w, p2.h, 4);
+        ctx.roundRect(Bisaya.x, Bisaya.y, Bisaya.w, Bisaya.h, 4);
 
         ctx.fill();
 
@@ -648,7 +648,7 @@
 
         draw();
 
-        const label = winner === "p1" ? "PLAYER 1" : "PLAYER 2";
+        const label = winner === "Tagalog" ? "PLAYER 1" : "PLAYER 2";
 
         message.textContent = `🏆 ${label} WINS!  Press SPACE to play again.`;
       }
@@ -656,7 +656,7 @@
       function resetGame() {
         cancelAnimationFrame(animId);
 
-        state.scores = { p1: 0, p2: 0 };
+        state.scores = { Tagalog: 0, Bisaya: 0 };
 
         state.gameOver = false;
 
@@ -672,13 +672,13 @@
       }
 
       function resetPaddles() {
-        p1.y = canvas.height / 2 - p1.h / 2;
+        Tagalog.y = canvas.height / 2 - Tagalog.h / 2;
 
-        p2.y = canvas.height / 2 - p2.h / 2;
+        Bisaya.y = canvas.height / 2 - Bisaya.h / 2;
 
-        p1.dy = 0;
+        Tagalog.dy = 0;
 
-        p2.dy = 0;
+        Bisaya.dy = 0;
       }
 
       /* ─────────────────────────────────────────
